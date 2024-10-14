@@ -1,6 +1,6 @@
 let birdY = 0;
 let velocity = 0;
-const pipes: { x: number; y: number; letter: string }[] = [];
+const pipes: { x: number; y: number; letter: string; passed: boolean }[] = []; // Añadir propiedad passed
 let gameOver = false;
 let frame = 0;
 const gravity = 0.6;
@@ -16,8 +16,10 @@ function getRandomLetter() {
 export function startGame(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
-  setIsGameOver: (gameOver: boolean) => void
+  setIsGameOver: (gameOver: boolean) => void,
+  setScore: (score: number) => void // Añadir función para actualizar el puntaje
 ) {
+  let score = 0; // Variable local para el puntaje
   const bird = new Image();
   const background = new Image();
   const pipeBottom = new Image();
@@ -57,8 +59,8 @@ export function startGame(
     // Generar nuevos tubos
     if (frame % 90 === 0) {
       const pipeY = Math.floor(Math.random() * (canvas.height - gap));
-      const letter = getRandomLetter(); // Generar letra aleatoria
-      pipes.push({ x: canvas.width, y: pipeY, letter }); // Añadir la letra al tubo
+      const letter = getRandomLetter();
+      pipes.push({ x: canvas.width, y: pipeY, letter, passed: false }); // Añadir passed como falso
     }
 
     // Dibujar y mover los tubos
@@ -76,15 +78,15 @@ export function startGame(
       ctx.fillStyle = "black";
 
       // Aplicar sombra a las letras
-      ctx.fillStyle = "black"; // Color de la letra
-      ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; // Color de la sombra
+      ctx.fillStyle = "black";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
       ctx.font = "bold 30px Arial";
-      ctx.shadowBlur = 10; // Nivel de difuminado
-      ctx.shadowOffsetX = 3; // Desplazamiento horizontal
-      ctx.shadowOffsetY = 3; // Desplazamiento vertical
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
 
       // Dibujar la letra
-      ctx.fillText(p.letter, p.x + pipeWidth / 2 - 10, p.y + gap / 2); // Ajusta la posición de la letra
+      ctx.fillText(p.letter, p.x + pipeWidth / 2 - 10, p.y + gap / 2);
 
       // Eliminar el efecto de sombra después de dibujar la letra
       ctx.shadowColor = "transparent";
@@ -93,6 +95,13 @@ export function startGame(
       ctx.shadowOffsetY = 0;
 
       p.x -= 3;
+
+      // Incrementar el puntaje cuando el pájaro pasa el pipe
+      if (p.x + pipeWidth < 50 && !p.passed) {
+        p.passed = true; // Asegurarse de que no se cuente más de una vez
+        score += 1;
+        setScore(score); // Actualizar el puntaje en el componente Score
+      }
 
       // Eliminar tubos fuera de la pantalla
       if (p.x + pipeWidth < 0) {
@@ -106,7 +115,7 @@ export function startGame(
         50 < p.x + pipeWidth
       ) {
         gameOver = true;
-        setIsGameOver(true); // Mostrar menú al perder
+        setIsGameOver(true);
         return;
       }
     }
@@ -114,22 +123,22 @@ export function startGame(
     // Comprobar si el pájaro toca el suelo o el techo
     if (birdY + 50 > canvas.height || birdY < 0) {
       gameOver = true;
-      setIsGameOver(true); // Mostrar menú al perder
+      setIsGameOver(true);
       return;
     }
 
     frame++;
-    requestAnimationFrame(update); // Continuar el loop del juego
+    requestAnimationFrame(update);
   }
 
-  // Asegúrate de que todas las imágenes se carguen antes de iniciar el juego
+  // Asegurarse de que todas las imágenes se carguen antes de iniciar el juego
   let imagesLoaded = 0;
   const imagesToLoad = 4;
 
   function onImageLoad() {
     imagesLoaded++;
     if (imagesLoaded === imagesToLoad) {
-      update(); // Inicia el juego solo cuando todas las imágenes están cargadas
+      update();
     }
   }
 
@@ -142,7 +151,8 @@ export function startGame(
 export function resetGame(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
-  setIsGameOver: (gameOver: boolean) => void
+  setIsGameOver: (gameOver: boolean) => void,
+  setScore: (score: number) => void
 ) {
   birdY = canvas.height / 2;
   velocity = 0;
@@ -150,6 +160,7 @@ export function resetGame(
   frame = 0;
   gameOver = false;
 
-  setIsGameOver(false); // Asegurarse de que el estado de GameOver sea falso
-  startGame(canvas, ctx, setIsGameOver); // Reiniciar el juego
+  setIsGameOver(false);
+  setScore(0); // Reiniciar el puntaje
+  startGame(canvas, ctx, setIsGameOver, setScore); // Reiniciar el juego
 }
