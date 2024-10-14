@@ -1,8 +1,17 @@
-import Router from "next/router";
+let birdY = 0;
+let velocity = 0;
+const pipes: { x: number; y: number }[] = [];
+let gameOver = false;
+let frame = 0;
+const gravity = 0.6;
+const pipeWidth = 60;
+const pipeHeight = 300;
+const gap = 200;
 
 export function startGame(
   canvas: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasRenderingContext2D,
+  setIsGameOver: (gameOver: boolean) => void
 ) {
   const bird = new Image();
   const background = new Image();
@@ -14,15 +23,7 @@ export function startGame(
   pipeBottom.src = "/images/game/pipe.svg";
   pipeTop.src = "/images/game/pipeTop.svg";
 
-  let birdY = canvas.height / 2;
-  const gravity = 0.6;
-  let velocity = 0;
-  const pipes: { x: number; y: number }[] = [];
-  const pipeWidth = 60;
-  const pipeHeight = 300;
-  const gap = 200;
-  let frame = 0;
-  let gameOver = false;
+  birdY = canvas.height / 2;
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === " ") {
@@ -31,62 +32,6 @@ export function startGame(
   };
 
   window.addEventListener("keydown", handleKeyPress);
-
-  function showGameOverMenu() {
-    // Verificar si el menú ya existe y eliminarlo si es necesario
-    const existingMenu = document.getElementById("game-over-menu");
-    if (existingMenu) {
-      existingMenu.remove();
-    }
-
-    const gameOverMenu = document.createElement("div");
-    gameOverMenu.id = "game-over-menu"; // Asegurar que tiene un ID para eliminarlo después
-    gameOverMenu.style.position = "absolute";
-    gameOverMenu.style.top = "50%";
-    gameOverMenu.style.left = "50%";
-    gameOverMenu.style.transform = "translate(-50%, -50%)";
-    gameOverMenu.style.padding = "20px";
-    gameOverMenu.style.backgroundColor = "white";
-    gameOverMenu.style.border = "2px solid black";
-    gameOverMenu.style.textAlign = "center";
-
-    const message = document.createElement("p");
-    message.innerText = "Game Over!";
-
-    const retryButton = document.createElement("button");
-    retryButton.innerText = "Retry";
-    retryButton.onclick = () => {
-      Router.push("/"); // Redirigir a la página principal
-    };
-
-    const continueButton = document.createElement("button");
-    continueButton.innerText = "Continue";
-    continueButton.onclick = () => {
-      gameOverMenu.remove(); // Eliminar el cartel de Game Over
-      resetGame(); // Reiniciar el juego
-    };
-
-    gameOverMenu.appendChild(message);
-    gameOverMenu.appendChild(retryButton);
-    gameOverMenu.appendChild(continueButton);
-    document.body.appendChild(gameOverMenu);
-  }
-
-  function resetGame() {
-    birdY = canvas.height / 2;
-    velocity = 0;
-    pipes.length = 0;
-    frame = 0;
-    gameOver = false;
-
-    // Limpiar el cartel de Game Over
-    const gameOverMenu = document.getElementById("game-over-menu");
-    if (gameOverMenu) {
-      gameOverMenu.remove();
-    }
-
-    update(); // Iniciar la nueva partida
-  }
 
   function update() {
     if (gameOver) return;
@@ -134,7 +79,7 @@ export function startGame(
         50 < p.x + pipeWidth
       ) {
         gameOver = true;
-        showGameOverMenu(); // Mostrar menú al perder
+        setIsGameOver(true); // Mostrar menú al perder
         return;
       }
     }
@@ -142,7 +87,7 @@ export function startGame(
     // Comprobar si el pájaro toca el suelo o el techo
     if (birdY + 50 > canvas.height || birdY < 0) {
       gameOver = true;
-      showGameOverMenu(); // Mostrar menú al perder
+      setIsGameOver(true); // Mostrar menú al perder
       return;
     }
 
@@ -165,4 +110,19 @@ export function startGame(
   background.onload = onImageLoad;
   pipeBottom.onload = onImageLoad;
   pipeTop.onload = onImageLoad;
+}
+
+export function resetGame(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  setIsGameOver: (gameOver: boolean) => void
+) {
+  birdY = canvas.height / 2;
+  velocity = 0;
+  pipes.length = 0;
+  frame = 0;
+  gameOver = false;
+
+  setIsGameOver(false); // Asegurarse de que el estado de GameOver sea falso
+  startGame(canvas, ctx, setIsGameOver); // Reiniciar el juego
 }
