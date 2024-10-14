@@ -1,9 +1,12 @@
-// src/app/game/page.tsx
+import GameCanvas from "@/components/game/GameCanvas";
+
 export default function GamePage() {
   return (
     <div>
-      <h1>Game Page</h1>
-      <p>Here will be the game content.</p>
+      <h1>Typing Bird</h1>
+      <div className="flex justify-center items-center">
+        <GameCanvas />
+      </div>
     </div>
   );
 }
