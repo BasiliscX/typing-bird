@@ -3,15 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { startGame, resetGame } from "./gameLogic";
 import GameOverMenu from "./GameOverMenu";
-import Score from "./Score"; // Importar el componente Score
+import Score from "./Score";
 import BrutalistBox from "../box/BrutalistBox";
+import WelcomeScreen from "./WelcomeScreen";
 
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [score, setScore] = useState(0); // Estado para el puntaje
+  const [score, setScore] = useState(0);
+  const [showWelcome, setShowWelcome] = useState(true); // Estado para mostrar la pantalla de bienvenida
 
-  useEffect(() => {
+  const initializeGame = () => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
@@ -19,29 +21,44 @@ export default function GameCanvas() {
         startGame(canvas, ctx, setIsGameOver, setScore); // Iniciar la lógica del juego con setScore
       }
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    if (!showWelcome) {
+      initializeGame(); // Solo inicia el juego si la pantalla de bienvenida está oculta
+    }
+  }, [showWelcome]);
 
   const handleRetry = () => {
     setIsGameOver(false);
     setScore(0); // Reiniciar el puntaje al reiniciar el juego
-    window.location.href = "/"; // Redirigir a la página principal
+    resetGame(
+      canvasRef.current!,
+      canvasRef.current!.getContext("2d")!,
+      setIsGameOver,
+      setScore
+    );
   };
 
   const handleContinue = () => {
     setIsGameOver(false);
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        resetGame(canvas, ctx, setIsGameOver, setScore); // Reiniciar el juego con setScore
-      }
-    }
+    resetGame(
+      canvasRef.current!,
+      canvasRef.current!.getContext("2d")!,
+      setIsGameOver,
+      setScore
+    );
+  };
+
+  const handleStartGame = () => {
+    setShowWelcome(false); // Ocultar la pantalla de bienvenida y empezar el juego
   };
 
   return (
     <BrutalistBox style={{ position: "relative" }}>
+      {showWelcome && <WelcomeScreen onStart={handleStartGame} />}
       <canvas ref={canvasRef} width={800} height={600} />
-      <Score score={score} /> {/* Mostrar puntaje */}
+      <Score score={score} />
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
       )}
