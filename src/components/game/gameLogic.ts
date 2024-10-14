@@ -1,12 +1,17 @@
 let birdY = 0;
 let velocity = 0;
-const pipes: { x: number; y: number }[] = [];
+const pipes: { x: number; y: number; letter: string }[] = [];
 let gameOver = false;
 let frame = 0;
 const gravity = 0.6;
 const pipeWidth = 60;
 const pipeHeight = 400;
 const gap = 200;
+
+function getRandomLetter() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return alphabet[Math.floor(Math.random() * alphabet.length)];
+}
 
 export function startGame(
   canvas: HTMLCanvasElement,
@@ -52,7 +57,8 @@ export function startGame(
     // Generar nuevos tubos
     if (frame % 90 === 0) {
       const pipeY = Math.floor(Math.random() * (canvas.height - gap));
-      pipes.push({ x: canvas.width, y: pipeY });
+      const letter = getRandomLetter(); // Generar letra aleatoria
+      pipes.push({ x: canvas.width, y: pipeY, letter }); // Añadir la letra al tubo
     }
 
     // Dibujar y mover los tubos
@@ -64,6 +70,11 @@ export function startGame(
 
       // Dibujar tubería inferior
       ctx.drawImage(pipeBottom, p.x, p.y + gap, pipeWidth, pipeHeight);
+
+      // Dibujar la letra sobre la tubería
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "black";
+      ctx.fillText(p.letter, p.x + pipeWidth / 2 - 10, p.y + gap / 2); // Ajusta la posición de la letra
 
       p.x -= 3;
 
