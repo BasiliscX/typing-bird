@@ -1,8 +1,9 @@
 let birdY = 0;
 let velocity = 0;
-const pipes: { x: number; y: number; letter: string; passed: boolean }[] = []; // Añadir propiedad passed
+const pipes: { x: number; y: number; letter: string; passed: boolean }[] = [];
 let gameOver = false;
 let frame = 0;
+let currentJumpKey = " "; // Inicializar con la tecla de espacio
 const gravity = 0.6;
 const pipeWidth = 60;
 const pipeHeight = 400;
@@ -17,9 +18,9 @@ export function startGame(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   setIsGameOver: (gameOver: boolean) => void,
-  setScore: (score: number) => void // Añadir función para actualizar el puntaje
+  setScore: (score: number) => void
 ) {
-  let score = 0; // Variable local para el puntaje
+  let score = 0;
   const bird = new Image();
   const background = new Image();
   const pipeBottom = new Image();
@@ -33,7 +34,14 @@ export function startGame(
   birdY = canvas.height / 2;
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === " ") {
+    const keyPressed = e.key.toUpperCase();
+
+    // Permitir saltar con la tecla correcta, con "Tab" hasta puntaje 10, o con " " al inicio
+    if (
+      keyPressed === currentJumpKey ||
+      (keyPressed === "TAB" && score < 10) ||
+      (keyPressed === " " && currentJumpKey === " ") // Al inicio del juego con espacio
+    ) {
       velocity = -10; // Saltar
     }
   };
@@ -60,7 +68,7 @@ export function startGame(
     if (frame % 90 === 0) {
       const pipeY = Math.floor(Math.random() * (canvas.height - gap));
       const letter = getRandomLetter();
-      pipes.push({ x: canvas.width, y: pipeY, letter, passed: false }); // Añadir passed como falso
+      pipes.push({ x: canvas.width, y: pipeY, letter, passed: false });
     }
 
     // Dibujar y mover los tubos
@@ -75,9 +83,6 @@ export function startGame(
 
       // Dibujar la letra sobre la tubería con sombra
       ctx.font = "30px Arial";
-      ctx.fillStyle = "black";
-
-      // Aplicar sombra a las letras
       ctx.fillStyle = "black";
       ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
       ctx.font = "bold 30px Arial";
@@ -98,9 +103,12 @@ export function startGame(
 
       // Incrementar el puntaje cuando el pájaro pasa el pipe
       if (p.x + pipeWidth < 50 && !p.passed) {
-        p.passed = true; // Asegurarse de que no se cuente más de una vez
+        p.passed = true;
         score += 1;
-        setScore(score); // Actualizar el puntaje en el componente Score
+        setScore(score);
+
+        // Actualizar la tecla de salto al pasar el pipe
+        currentJumpKey = p.letter; // Solo puedes saltar con la letra del pipe que has pasado
       }
 
       // Eliminar tubos fuera de la pantalla
@@ -159,6 +167,7 @@ export function resetGame(
   pipes.length = 0;
   frame = 0;
   gameOver = false;
+  currentJumpKey = " "; // Reiniciar la tecla de salto al espacio
 
   setIsGameOver(false);
   setScore(0); // Reiniciar el puntaje
