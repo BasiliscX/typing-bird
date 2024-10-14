@@ -64,6 +64,20 @@ export function startGame(
     // Dibujar el pájaro
     ctx.drawImage(bird, 50, birdY, 50, 50);
 
+    // Mostrar la tecla de salto encima del pájaro
+    ctx.font = "bold 24px Arial";
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+
+    // Mostrar "TAB" si no hay letra asignada, de lo contrario mostrar la letra actual
+    const text =
+      currentJumpKey === " " ? "Jump: TAB" : `Jump: ${currentJumpKey}`;
+
+    // Dibujar el texto con borde
+    ctx.strokeText(text, 30, birdY - 10); // Borde del texto
+    ctx.fillText(text, 30, birdY - 10); // Texto blanco encima del pájaro
+
     // Determinar el intervalo de generación de tubos
     const pipeSpawnRate = score < 10 ? 150 : 90; // Mayor distancia entre pipes si el puntaje es menor a 10
 
