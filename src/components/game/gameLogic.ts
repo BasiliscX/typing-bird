@@ -64,8 +64,11 @@ export function startGame(
     // Dibujar el pájaro
     ctx.drawImage(bird, 50, birdY, 50, 50);
 
+    // Determinar el intervalo de generación de tubos
+    const pipeSpawnRate = score < 10 ? 150 : 90; // Mayor distancia entre pipes si el puntaje es menor a 10
+
     // Generar nuevos tubos
-    if (frame % 90 === 0) {
+    if (frame % pipeSpawnRate === 0) {
       const pipeY = Math.floor(Math.random() * (canvas.height - gap));
       const letter = getRandomLetter();
       pipes.push({ x: canvas.width, y: pipeY, letter, passed: false });
