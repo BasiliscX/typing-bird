@@ -39,7 +39,7 @@ export function createPipes(
     });
   }
 
-  function checkCollision(birdY: number, birdHeight: number) {
+  function checkCollision(birdY: number) {
     for (let i = 0; i < pipes.length; i++) {
       const p = pipes[i];
       if (

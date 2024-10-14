@@ -5,7 +5,7 @@ let gameOver = false;
 let frame = 0;
 const gravity = 0.6;
 const pipeWidth = 60;
-const pipeHeight = 300;
+const pipeHeight = 400;
 const gap = 200;
 
 export function startGame(
