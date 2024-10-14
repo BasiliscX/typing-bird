@@ -71,10 +71,26 @@ export function startGame(
       // Dibujar tubería inferior
       ctx.drawImage(pipeBottom, p.x, p.y + gap, pipeWidth, pipeHeight);
 
-      // Dibujar la letra sobre la tubería
+      // Dibujar la letra sobre la tubería con sombra
       ctx.font = "30px Arial";
       ctx.fillStyle = "black";
+
+      // Aplicar sombra a las letras
+      ctx.fillStyle = "black"; // Color de la letra
+      ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; // Color de la sombra
+      ctx.font = "bold 30px Arial";
+      ctx.shadowBlur = 10; // Nivel de difuminado
+      ctx.shadowOffsetX = 3; // Desplazamiento horizontal
+      ctx.shadowOffsetY = 3; // Desplazamiento vertical
+
+      // Dibujar la letra
       ctx.fillText(p.letter, p.x + pipeWidth / 2 - 10, p.y + gap / 2); // Ajusta la posición de la letra
+
+      // Eliminar el efecto de sombra después de dibujar la letra
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
 
       p.x -= 3;
 
