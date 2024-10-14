@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { startGame, resetGame } from "./gameLogic";
 import GameOverMenu from "./GameOverMenu";
 import Score from "./Score"; // Importar el componente Score
+import BrutalistBox from "../box/BrutalistBox";
 
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -38,12 +39,12 @@ export default function GameCanvas() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <BrutalistBox style={{ position: "relative" }}>
       <canvas ref={canvasRef} width={800} height={600} />
       <Score score={score} /> {/* Mostrar puntaje */}
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
       )}
-    </div>
+    </BrutalistBox>
   );
 }
