@@ -40,7 +40,7 @@ export function startGame(
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Dibujar el fondo
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(background, 0, 0, canvas.width + 400, canvas.height);
 
     // Actualizar la posición del pájaro
     velocity += gravity;

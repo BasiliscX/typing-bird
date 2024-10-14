@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { startGame, resetGame } from "./gameLogic"; // Aseguramos que resetGame esté importado
 import GameOverMenu from "./GameOverMenu";
+import BrutalistBox from "../box/BrutalistBox";
 
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -35,11 +36,11 @@ export default function GameCanvas() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <canvas ref={canvasRef} width={800} height={600}></canvas>
+    <BrutalistBox className="relative">
+      <canvas ref={canvasRef} width={800} height={600} />
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
       )}
-    </div>
+    </BrutalistBox>
   );
 }

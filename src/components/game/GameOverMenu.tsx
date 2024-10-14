@@ -1,3 +1,5 @@
+import Box from "../box/Box";
+
 type GameOverMenuProps = {
   onRetry: () => void;
   onContinue: () => void;
@@ -8,11 +10,15 @@ export default function GameOverMenu({
   onContinue,
 }: GameOverMenuProps) {
   return (
-    <div style={styles.menu}>
+    <Box style={styles.menu} className="shadow-lg shadow-black">
       <p>Game Over!</p>
-      <button onClick={onRetry}>Retry</button>
-      <button onClick={onContinue}>Continue</button>
-    </div>
+      <button className="boxButton mr-4" onClick={onRetry}>
+        Retry
+      </button>
+      <button className="boxButton" onClick={onContinue}>
+        Continue
+      </button>
+    </Box>
   );
 }
 
