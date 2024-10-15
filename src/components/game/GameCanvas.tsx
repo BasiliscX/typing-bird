@@ -17,8 +17,8 @@ export default function GameCanvas() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [isMusicOn, setIsMusicOn] = useState(true);
   const [canvasSize, setCanvasSize] = useState({
-    width: Math.min(window.innerWidth, 800),
-    height: Math.min(window.innerHeight, 600),
+    width: 800,
+    height: 600,
   });
 
   const toggleMusic = useAudioControl(isMusicOn, audioRef);
@@ -30,23 +30,21 @@ export default function GameCanvas() {
     setScore
   );
 
-  // Update canvas size based on window size
+  // Update canvas size based on window size (only on the client)
   useEffect(() => {
     const updateCanvasSize = () => {
-      setCanvasSize({
-        width: Math.min(window.innerWidth, 800),
-        height: Math.min(window.innerHeight, 600),
-      });
+      const width = Math.min(window.innerWidth * 0.9, 800);
+      const height = Math.min(window.innerHeight * 0.8, 600);
+      setCanvasSize({ width, height });
     };
 
-    // Listen for window resize events
-    window.addEventListener("resize", updateCanvasSize);
+    // Check if window is available (client-side)
+    if (typeof window !== "undefined") {
+      updateCanvasSize();
+      window.addEventListener("resize", updateCanvasSize);
 
-    // Set initial canvas size
-    updateCanvasSize();
-
-    // Clean up the event listener
-    return () => window.removeEventListener("resize", updateCanvasSize);
+      return () => window.removeEventListener("resize", updateCanvasSize);
+    }
   }, []);
 
   // Start game when welcome screen is dismissed
@@ -97,6 +95,7 @@ export default function GameCanvas() {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
+        className="w-full h-auto max-w-full max-h-full"
       />
       <Score score={score} />
       {isGameOver && (
