@@ -86,3 +86,7 @@ body {
   font-weight: bolder;
   box-shadow: 0 2px 0 2px #000;
 }
+
+.font-impact {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
