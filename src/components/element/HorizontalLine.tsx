@@ -11,9 +11,7 @@ export default function HorizontalLine({
     display: "flex",
     alignItems: "center",
     gap: "1rem",
-    marginBottom: "1rem",
     borderBottom: "2px solid #000",
-    paddingBottom: "1rem",
   };
   return (
     <div

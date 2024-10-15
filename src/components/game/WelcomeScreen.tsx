@@ -29,9 +29,8 @@ export default function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       }}
     >
       <H2>Typing Bird</H2>
-      <p className="py-4">Welcome to the Typing Bird game</p>
       <ul>
-        <HorizontalLine />
+        <HorizontalLine className="mt-4" />
         <li className="flex justify-center items-center">
           Press &quot;Space&quot; or &quot;Tab&quot; to jump at the beginning of
           the game.
@@ -61,7 +60,7 @@ export default function WelcomeScreen({ onStart }: WelcomeScreenProps) {
           <br />
           to the letter of the pipe you pass.
         </li>
-        <HorizontalLine />
+        <HorizontalLine className="mb-4 mt-2" />
       </ul>
       <BrutalistBox>
         <button onClick={onStart} className="boxButton">
