@@ -3,7 +3,7 @@ let velocity = 0;
 const pipes: { x: number; y: number; letter: string; passed: boolean }[] = [];
 let gameOver = false;
 let frame = 0;
-let currentJumpKey = " "; // Inicializar con la tecla de espacio
+let currentJumpKey = " ";
 const gravity = 0.6;
 const pipeWidth = 60;
 const pipeHeight = 400;
@@ -41,18 +41,17 @@ export function startGame(
   const handleKeyPress = (e: KeyboardEvent) => {
     const keyPressed = e.key.toUpperCase();
 
-    // Permitir saltar con la tecla correcta, con "Tab" hasta puntaje 10, o con " " al inicio
     if (
       keyPressed === currentJumpKey ||
       (keyPressed === "Espace" && score < 10) ||
-      (keyPressed === " " && currentJumpKey === " ") // Al inicio del juego con espacio
+      (keyPressed === " " && currentJumpKey === " ")
     ) {
       if (jumpSound) {
-        jumpSound.currentTime = 0; // Reiniciar el audio para reproducir desde el inicio
-        jumpSound.play(); // Reproducir el sonido de salto
+        jumpSound.currentTime = 0;
+        jumpSound.play();
       }
 
-      velocity = -10; // Saltar
+      velocity = -10;
     }
   };
 
@@ -80,16 +79,15 @@ export function startGame(
     ctx.strokeStyle = "black";
     ctx.lineWidth = 3;
 
-    // Mostrar "TAB" si no hay letra asignada, de lo contrario mostrar la letra actual
     const text =
       currentJumpKey === " " ? "Jump: Espace" : `Jump: ${currentJumpKey}`;
 
     // Dibujar el texto con borde
-    ctx.strokeText(text, 30, birdY - 10); // Borde del texto
-    ctx.fillText(text, 30, birdY - 10); // Texto blanco encima del pájaro
+    ctx.strokeText(text, 30, birdY - 10);
+    ctx.fillText(text, 30, birdY - 10);
 
     // Determinar el intervalo de generación de tubos
-    const pipeSpawnRate = score < 10 ? 150 : 90; // Mayor distancia entre pipes si el puntaje es menor a 10
+    const pipeSpawnRate = score < 6 ? 200 : 90;
 
     // Generar nuevos tubos
     if (frame % pipeSpawnRate === 0) {
@@ -135,7 +133,7 @@ export function startGame(
         setScore(score);
 
         // Actualizar la tecla de salto al pasar el pipe
-        currentJumpKey = p.letter; // Solo puedes saltar con la letra del pipe que has pasado
+        currentJumpKey = p.letter;
       }
 
       // Eliminar tubos fuera de la pantalla
@@ -194,9 +192,9 @@ export function resetGame(
   pipes.length = 0;
   frame = 0;
   gameOver = false;
-  currentJumpKey = " "; // Reiniciar la tecla de salto al espacio
+  currentJumpKey = " ";
 
   setIsGameOver(false);
-  setScore(0); // Reiniciar el puntaje
-  startGame(canvas, ctx, setIsGameOver, setScore); // Reiniciar el juego
+  setScore(0);
+  startGame(canvas, ctx, setIsGameOver, setScore);
 }
