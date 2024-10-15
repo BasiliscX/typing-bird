@@ -8,7 +8,7 @@ import Score from "./Score";
 import BrutalistBox from "../box/BrutalistBox";
 import WelcomeScreen from "./WelcomeScreen";
 import MusicToggleButton from "./components/MusicToggleButton";
-
+import VirtualKeyboard from "./components/VirtualKeyboard";
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -30,6 +30,12 @@ export default function GameCanvas() {
     setScore
   );
 
+  // Define `handleVirtualKeyPress`
+  const handleVirtualKeyPress = (key: string) => {
+    const event = new KeyboardEvent("keydown", { key });
+    window.dispatchEvent(event);
+  };
+
   // Update canvas size based on window size (only on the client)
   useEffect(() => {
     const updateCanvasSize = () => {
@@ -38,7 +44,6 @@ export default function GameCanvas() {
       setCanvasSize({ width, height });
     };
 
-    // Check if window is available (client-side)
     if (typeof window !== "undefined") {
       updateCanvasSize();
       window.addEventListener("resize", updateCanvasSize);
@@ -47,14 +52,12 @@ export default function GameCanvas() {
     }
   }, []);
 
-  // Start game when welcome screen is dismissed
   useEffect(() => {
     if (!showWelcome) {
       initializeGame();
     }
   }, [showWelcome, initializeGame]);
 
-  // Pause music on game over
   useEffect(() => {
     if (isGameOver && audioRef.current) {
       audioRef.current.pause();
@@ -106,6 +109,9 @@ export default function GameCanvas() {
         setIsMusicOn={setIsMusicOn}
         toggleMusic={toggleMusic}
       />
+      <div className="md:hidden">
+        <VirtualKeyboard onKeyPress={handleVirtualKeyPress} />
+      </div>
     </BrutalistBox>
   );
 }
