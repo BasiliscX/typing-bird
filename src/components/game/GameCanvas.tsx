@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { startGame, resetGame } from "./gameLogic";
 import GameOverMenu from "./GameOverMenu";
 import Score from "./Score";
@@ -13,25 +13,27 @@ export default function GameCanvas() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [showWelcome, setShowWelcome] = useState(true); // Estado para mostrar la pantalla de bienvenida
+  const [isMusicOn, setIsMusicOn] = useState(true); // Estado para controlar la música
 
-  const initializeGame = () => {
+  // Utilizar useCallback para evitar recrear la función en cada render
+  const initializeGame = useCallback(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         startGame(canvas, ctx, setIsGameOver, setScore); // Iniciar la lógica del juego con setScore
-        if (audioRef.current) {
-          audioRef.current.play(); // Iniciar la música de fondo al iniciar el juego
+        if (audioRef.current && isMusicOn) {
+          audioRef.current.play(); // Iniciar la música de fondo si está encendida
         }
       }
     }
-  };
+  }, [isMusicOn]);
 
   useEffect(() => {
     if (!showWelcome) {
       initializeGame(); // Solo inicia el juego si la pantalla de bienvenida está oculta
     }
-  }, [showWelcome]);
+  }, [showWelcome, initializeGame]);
 
   const handleRetry = () => {
     setIsGameOver(false);
@@ -42,8 +44,8 @@ export default function GameCanvas() {
       setIsGameOver,
       setScore
     );
-    if (audioRef.current) {
-      audioRef.current.play(); // Reanudar la música al reiniciar el juego
+    if (audioRef.current && isMusicOn) {
+      audioRef.current.play(); // Reanudar la música al reiniciar el juego si está encendida
     }
   };
 
@@ -55,8 +57,8 @@ export default function GameCanvas() {
       setIsGameOver,
       setScore
     );
-    if (audioRef.current) {
-      audioRef.current.play(); // Reanudar la música al continuar
+    if (audioRef.current && isMusicOn) {
+      audioRef.current.play(); // Reanudar la música al continuar si está encendida
     }
   };
 
@@ -71,6 +73,17 @@ export default function GameCanvas() {
     }
   }, [isGameOver]);
 
+  const toggleMusic = () => {
+    setIsMusicOn((prev) => !prev);
+    if (audioRef.current) {
+      if (isMusicOn) {
+        audioRef.current.pause(); // Pausar la música si estaba encendida
+      } else {
+        audioRef.current.play(); // Reproducir la música si estaba apagada
+      }
+    }
+  };
+
   return (
     <BrutalistBox style={{ position: "relative" }}>
       {showWelcome && <WelcomeScreen onStart={handleStartGame} />}
@@ -84,6 +97,20 @@ export default function GameCanvas() {
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
       )}
+      <button
+        onClick={toggleMusic}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          backgroundColor: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: "white",
+        }}
+      >
+        {isMusicOn ? "🔊" : "🔇"}
+      </button>
     </BrutalistBox>
   );
 }
