@@ -18,7 +18,7 @@ export function createBird(canvasHeight: number) {
   }
 
   function jump() {
-    birdState.velocity = -10; // Salta
+    birdState.velocity = -10;
   }
 
   function reset() {
