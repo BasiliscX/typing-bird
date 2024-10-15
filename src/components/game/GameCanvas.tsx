@@ -37,16 +37,12 @@ export default function GameCanvas() {
 
   const handleRetry = () => {
     setIsGameOver(false);
-    setScore(0); // Reiniciar el puntaje al reiniciar el juego
-    resetGame(
-      canvasRef.current!,
-      canvasRef.current!.getContext("2d")!,
-      setIsGameOver,
-      setScore
-    );
+    setScore(0); // Reiniciar el puntaje
     if (audioRef.current && isMusicOn) {
-      audioRef.current.play(); // Reanudar la música al reiniciar el juego si está encendida
+      audioRef.current.pause(); // Detener la música al regresar a la página principal
+      audioRef.current.currentTime = 0; // Reiniciar la música
     }
+    window.location.href = "/"; // Redirigir a la página principal
   };
 
   const handleContinue = () => {
