@@ -1,10 +1,10 @@
-import TitleH1 from "@/components/element/TitleH1";
+import Title from "@/components/element/Title";
 import GameCanvas from "@/components/game/GameCanvas";
 
 export default function GamePage() {
   return (
     <div>
-      <TitleH1 className="hTitle" />
+      <Title className="hTitle" title="TypingBird" />
       <div className="flex justify-center mt-10">
         <GameCanvas />
       </div>

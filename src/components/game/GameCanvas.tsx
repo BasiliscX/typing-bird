@@ -1,48 +1,50 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import { startGame, resetGame } from "./gameLogic";
+import { useEffect, useRef, useState } from "react";
+import { resetGame } from "./gameLogic";
+import { useAudioControl, useInitializeGame } from "./hooks/GameCanvas.hook";
 import GameOverMenu from "./GameOverMenu";
 import Score from "./Score";
 import BrutalistBox from "../box/BrutalistBox";
 import WelcomeScreen from "./WelcomeScreen";
+import MusicToggleButton from "./components/MusicToggleButton";
 
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null); // Referencia al audio
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
-  const [showWelcome, setShowWelcome] = useState(true); // Estado para mostrar la pantalla de bienvenida
-  const [isMusicOn, setIsMusicOn] = useState(true); // Estado para controlar la música
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isMusicOn, setIsMusicOn] = useState(true);
 
-  // Utilizar useCallback para evitar recrear la función en cada render
-  const initializeGame = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        startGame(canvas, ctx, setIsGameOver, setScore); // Iniciar la lógica del juego con setScore
-        if (audioRef.current && isMusicOn) {
-          audioRef.current.play(); // Iniciar la música de fondo si está encendida
-        }
-      }
-    }
-  }, [isMusicOn]);
+  const toggleMusic = useAudioControl(isMusicOn, audioRef);
+  const initializeGame = useInitializeGame(
+    canvasRef,
+    audioRef,
+    isMusicOn,
+    setIsGameOver,
+    setScore
+  );
 
+  // Start game when welcome screen is dismissed
   useEffect(() => {
     if (!showWelcome) {
-      initializeGame(); // Solo inicia el juego si la pantalla de bienvenida está oculta
+      initializeGame();
     }
   }, [showWelcome, initializeGame]);
 
+  // Pause music on game over
+  useEffect(() => {
+    if (isGameOver && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [isGameOver]);
+
   const handleRetry = () => {
     setIsGameOver(false);
-    setScore(0); // Reiniciar el puntaje
-    if (audioRef.current && isMusicOn) {
-      audioRef.current.pause(); // Detener la música al regresar a la página principal
-      audioRef.current.currentTime = 0; // Reiniciar la música
-    }
-    window.location.href = "/"; // Redirigir a la página principal
+    setScore(0);
+    window.location.href = "/";
   };
 
   const handleContinue = () => {
@@ -54,31 +56,11 @@ export default function GameCanvas() {
       setScore
     );
     if (audioRef.current && isMusicOn) {
-      audioRef.current.play(); // Reanudar la música al continuar si está encendida
+      audioRef.current.play();
     }
   };
 
-  const handleStartGame = () => {
-    setShowWelcome(false); // Ocultar la pantalla de bienvenida y empezar el juego
-  };
-
-  useEffect(() => {
-    if (isGameOver && audioRef.current) {
-      audioRef.current.pause(); // Pausar la música cuando se acaba el juego
-      audioRef.current.currentTime = 0; // Reiniciar la música al comienzo
-    }
-  }, [isGameOver]);
-
-  const toggleMusic = () => {
-    setIsMusicOn((prev) => !prev);
-    if (audioRef.current) {
-      if (isMusicOn) {
-        audioRef.current.pause(); // Pausar la música si estaba encendida
-      } else {
-        audioRef.current.play(); // Reproducir la música si estaba apagada
-      }
-    }
-  };
+  const handleStartGame = () => setShowWelcome(false);
 
   return (
     <BrutalistBox style={{ position: "relative" }}>
@@ -86,27 +68,18 @@ export default function GameCanvas() {
       <audio
         ref={audioRef}
         src="/sounds/game/Juhani Junkala [Chiptune Adventures] 1. Stage 1.ogg"
-        loop // Repetir en bucle
+        loop
       />
       <canvas ref={canvasRef} width={800} height={600} />
       <Score score={score} />
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
       )}
-      <button
-        onClick={toggleMusic}
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          backgroundColor: "transparent",
-          border: "none",
-          cursor: "pointer",
-          color: "white",
-        }}
-      >
-        {isMusicOn ? "🔊" : "🔇"}
-      </button>
+      <MusicToggleButton
+        isMusicOn={isMusicOn}
+        setIsMusicOn={setIsMusicOn}
+        toggleMusic={toggleMusic}
+      />
     </BrutalistBox>
   );
 }
