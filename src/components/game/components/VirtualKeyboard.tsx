@@ -20,9 +20,9 @@ export default function VirtualKeyboard({ onKeyPress }: VirtualKeyboardProps) {
       ))}
       <button
         className="bg-green-500 text-white py-2 px-4 rounded shadow col-span-4"
-        onClick={() => onKeyPress("TAB")}
+        onClick={() => onKeyPress(" ")}
       >
-        Tab
+        Space
       </button>
     </Box>
   );

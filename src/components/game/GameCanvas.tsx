@@ -9,7 +9,6 @@ import BrutalistBox from "../box/BrutalistBox";
 import WelcomeScreen from "./WelcomeScreen";
 import MusicToggleButton from "./components/MusicToggleButton";
 import VirtualKeyboard from "./components/VirtualKeyboard";
-
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -41,7 +40,7 @@ export default function GameCanvas() {
   useEffect(() => {
     const updateCanvasSize = () => {
       const width = Math.min(window.innerWidth * 0.9, 800);
-      const height = Math.min(window.innerHeight * 0.7, 600); // El canvas ocupará el 70% de la pantalla
+      const height = Math.min(window.innerHeight * 0.8, 600);
       setCanvasSize({ width, height });
     };
 
@@ -88,26 +87,19 @@ export default function GameCanvas() {
   const handleStartGame = () => setShowWelcome(false);
 
   return (
-    <BrutalistBox
-      style={{ position: "relative" }}
-      className="h-screen flex flex-col"
-    >
+    <BrutalistBox style={{ position: "relative" }}>
       {showWelcome && <WelcomeScreen onStart={handleStartGame} />}
       <audio
         ref={audioRef}
         src="/sounds/game/Juhani Junkala [Chiptune Adventures] 1. Stage 1.ogg"
         loop
       />
-
-      <div className="flex-1 flex items-center justify-center">
-        <canvas
-          ref={canvasRef}
-          width={canvasSize.width}
-          height={canvasSize.height}
-          className="w-full h-auto max-w-full"
-        />
-      </div>
-
+      <canvas
+        ref={canvasRef}
+        width={canvasSize.width}
+        height={canvasSize.height}
+        className="w-full h-auto max-w-full max-h-full"
+      />
       <Score score={score} />
       {isGameOver && (
         <GameOverMenu onRetry={handleRetry} onContinue={handleContinue} />
@@ -117,10 +109,7 @@ export default function GameCanvas() {
         setIsMusicOn={setIsMusicOn}
         toggleMusic={toggleMusic}
       />
-
-      <div className="md:hidden h-1/4">
-        {" "}
-        {/* El teclado ocupará el 25% de la pantalla */}
+      <div className="md:hidden">
         <VirtualKeyboard onKeyPress={handleVirtualKeyPress} />
       </div>
     </BrutalistBox>

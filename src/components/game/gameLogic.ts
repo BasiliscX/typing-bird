@@ -44,7 +44,7 @@ export function startGame(
     // Permitir saltar con la tecla correcta, con "Tab" hasta puntaje 10, o con " " al inicio
     if (
       keyPressed === currentJumpKey ||
-      (keyPressed === "TAB" && score < 10) ||
+      (keyPressed === "Espace" && score < 10) ||
       (keyPressed === " " && currentJumpKey === " ") // Al inicio del juego con espacio
     ) {
       if (jumpSound) {
@@ -82,7 +82,7 @@ export function startGame(
 
     // Mostrar "TAB" si no hay letra asignada, de lo contrario mostrar la letra actual
     const text =
-      currentJumpKey === " " ? "Jump: TAB" : `Jump: ${currentJumpKey}`;
+      currentJumpKey === " " ? "Jump: Espace" : `Jump: ${currentJumpKey}`;
 
     // Dibujar el texto con borde
     ctx.strokeText(text, 30, birdY - 10); // Borde del texto
