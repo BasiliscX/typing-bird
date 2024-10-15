@@ -8,7 +8,11 @@ const gravity = 0.6;
 const pipeWidth = 60;
 const pipeHeight = 400;
 const gap = 200;
-const jumpSound = new Audio("/sounds/game/jump_07.wav");
+let jumpSound: HTMLAudioElement | null = null;
+
+if (typeof window !== "undefined") {
+  jumpSound = new Audio("/sounds/game/jump_07.wav");
+}
 
 function getRandomLetter() {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -43,8 +47,11 @@ export function startGame(
       (keyPressed === "TAB" && score < 10) ||
       (keyPressed === " " && currentJumpKey === " ") // Al inicio del juego con espacio
     ) {
-      jumpSound.currentTime = 0; // Reiniciar el audio para reproducir desde el inicio
-      jumpSound.play(); // Reproducir el sonido de salto
+      if (jumpSound) {
+        jumpSound.currentTime = 0; // Reiniciar el audio para reproducir desde el inicio
+        jumpSound.play(); // Reproducir el sonido de salto
+      }
+
       velocity = -10; // Saltar
     }
   };
