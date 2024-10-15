@@ -1,3 +1,5 @@
+import Box from "@/components/box/Box";
+
 interface VirtualKeyboardProps {
   onKeyPress: (key: string) => void;
 }
@@ -6,7 +8,7 @@ export default function VirtualKeyboard({ onKeyPress }: VirtualKeyboardProps) {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   return (
-    <div className="md:hidden virtual-keyboard grid grid-cols-6 gap-2 p-4">
+    <Box className="md:hidden bg-slate-50 virtual-keyboard grid grid-cols-6 gap-2 p-4 shadow-sm shadow-slate-400">
       {alphabet.map((letter) => (
         <button
           key={letter}
@@ -22,6 +24,6 @@ export default function VirtualKeyboard({ onKeyPress }: VirtualKeyboardProps) {
       >
         Tab
       </button>
-    </div>
+    </Box>
   );
 }
