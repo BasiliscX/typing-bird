@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation"; // Importar el hook useRouter
 import { startGame, resetGame } from "./gameLogic";
 import GameOverMenu from "./GameOverMenu";
 import Score from "./Score";
@@ -8,6 +9,7 @@ import BrutalistBox from "../box/BrutalistBox";
 import WelcomeScreen from "./WelcomeScreen";
 
 export default function GameCanvas() {
+  const router = useRouter(); // Hook para la navegación
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
@@ -32,12 +34,7 @@ export default function GameCanvas() {
   const handleRetry = () => {
     setIsGameOver(false);
     setScore(0); // Reiniciar el puntaje al reiniciar el juego
-    resetGame(
-      canvasRef.current!,
-      canvasRef.current!.getContext("2d")!,
-      setIsGameOver,
-      setScore
-    );
+    router.push("/"); // Redirigir a la página principal
   };
 
   const handleContinue = () => {

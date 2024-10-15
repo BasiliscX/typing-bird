@@ -1,6 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
+import H2 from "../element/H2";
+import BrutalistBox from "../box/BrutalistBox";
+import HorizontalLine from "../element/HorizontalLine";
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -24,33 +28,46 @@ export default function WelcomeScreen({ onStart }: WelcomeScreenProps) {
         zIndex: 10,
       }}
     >
-      <h1>Typing Bird</h1>
-      <p>Welcome to the Typing Bird game</p>
+      <H2>Typing Bird</H2>
+      <p className="py-4">Welcome to the Typing Bird game</p>
       <ul>
-        <li>
+        <HorizontalLine />
+        <li className="flex justify-center items-center">
           Press &quot;Space&quot; or &quot;Tab&quot; to jump at the beginning of
           the game.
+          <img
+            src="/images/game/we1.svg"
+            alt="Bird"
+            style={{ width: "100px", marginLeft: "10px" }}
+          />
         </li>
-        <li>
-          You must jump through the pipes using the correct key assigned to each
-          pipe.
+        <li className="flex justify-center items-center">
+          You must jump through the pipes
+          <br />
+          using the correct key assigned to each pipe.
+          <img
+            src="/images/game/we2.svg"
+            alt="Bird"
+            style={{ width: "100px", marginLeft: "10px" }}
+          />
         </li>
-        <li>The keys change according to the letter of the pipe you pass.</li>
-        <li>
-          If your score is less than 10, you can also jump with &quot;Tab&quot;.
+        <li className="flex justify-center items-center">
+          <img
+            src="/images/game/we3.svg"
+            alt="Bird"
+            style={{ width: "30px", marginLeft: "10px" }}
+          />
+          The keys change according
+          <br />
+          to the letter of the pipe you pass.
         </li>
+        <HorizontalLine />
       </ul>
-      <button
-        onClick={onStart}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: "pointer",
-          marginTop: "20px",
-        }}
-      >
-        Let´s start!
-      </button>
+      <BrutalistBox>
+        <button onClick={onStart} className="boxButton">
+          Let´s start!
+        </button>
+      </BrutalistBox>
     </div>
   );
 }

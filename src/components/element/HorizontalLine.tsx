@@ -14,7 +14,6 @@ export default function HorizontalLine({
     marginBottom: "1rem",
     borderBottom: "2px solid #000",
     paddingBottom: "1rem",
-    color: "#000",
   };
   return (
     <div

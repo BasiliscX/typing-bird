@@ -1,4 +1,5 @@
 import Box from "../box/Box";
+import HorizontalLine from "../element/HorizontalLine";
 
 type GameOverMenuProps = {
   onRetry: () => void;
@@ -11,7 +12,10 @@ export default function GameOverMenu({
 }: GameOverMenuProps) {
   return (
     <Box style={styles.menu} className="shadow-lg shadow-black">
+      <HorizontalLine />
       <p>Game Over!</p>
+      <p>What would you like to do?</p>
+      <HorizontalLine />
       <button className="boxButton mr-4" onClick={onRetry}>
         Retry
       </button>
