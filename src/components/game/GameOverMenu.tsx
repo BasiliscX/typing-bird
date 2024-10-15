@@ -11,7 +11,7 @@ export default function GameOverMenu({
   onContinue,
 }: GameOverMenuProps) {
   return (
-    <Box style={styles.menu} className="shadow-lg shadow-black">
+    <Box style={styles.menu} className="shadow-lg text-slate-900 shadow-black">
       <HorizontalLine />
       <p>Game Over!</p>
       <p>What would you like to do?</p>
